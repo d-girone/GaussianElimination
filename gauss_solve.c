@@ -81,27 +81,37 @@ void plu(int n, double A[n][n], int P[n]) {
         }
     }
 
-    // Find pivot (max absolute value in column k from row k to n)
-        int pivotRow = k;
+    // Perform LU Decomposition with partial pivoting
+    for (int k = 0; k < n; k++) {
+        // Find pivot (max absolute value in column k from row k to n)
+        int pivot = k;
         for (int i = k + 1; i < n; i++) {
-            if (fabs(U[i * n + k]) > fabs(U[pivotRow * n + k])) {
-                pivotRow = i;
+            if (fabs(U[i * n + k]) > fabs(U[pivot * n + k])) {
+                pivot = i;
             }
         }
 
-        // If pivotRow != k, swap rows k and pivotRow in U, P, and L
-        if (pivotRow != k) {
-            swapRows(U, n, k, pivotRow);
-            swapRows(P, n, k, pivotRow);
+        // If pivot is not k, swap rows in U, P, and L
+        if (pivot != k) {
+            // Swap rows in U
+            for (int j = 0; j < n; j++) {
+                double temp = U[k * n + j];
+                U[k * n + j] = U[pivot * n + j];
+                U[pivot * n + j] = temp;
+            }
 
-            // In L, we swap only the elements up to column k-1
+            // Swap rows in P (permutation vector)
+            double tempP = P[k];
+            P[k] = P[pivot];
+            P[pivot] = tempP;
+
+            // Swap corresponding entries in L (up to column k)
             for (int i = 0; i < k; i++) {
-                double temp = L[k * n + i];
-                L[k * n + i] = L[pivotRow * n + i];
-                L[pivotRow * n + i] = temp;
+                double tempL = L[k * n + i];
+                L[k * n + i] = L[pivot * n + i];
+                L[pivot * n + i] = tempL;
             }
         }
-
         // Perform the elimination process
         for (int i = k + 1; i < n; i++) {
             double multiplier = U[i][k] / U[k][k];
