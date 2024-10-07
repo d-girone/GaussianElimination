@@ -54,8 +54,7 @@ void lu_in_place(const int n, double A[n][n])
 
 void plu(int n, double A[n][n], int P[n]) {
     // Create a temporary array for row swapping
-    double temp_row[n];
-
+    
     // Initialize the permutation vector P
     for (int i = 0; i < n; i++) {
         P[i] = i;  // Identity matrix for permutation
@@ -86,9 +85,9 @@ void plu(int n, double A[n][n], int P[n]) {
         if (pivot != k) {
 	    // Swap rows in U
 	    for (int j = 0; j < n; j++) {
-	        temp_row[j] = U[k][j];
+	        temp = U[k][j];
 	        U[k][j] = U[pivot][j];
-	        U[pivot][j] = temp_row[j];
+	        U[pivot][j] = temp;
 	    }
 	
 	    // Swap rows in P (the permutation vector)
@@ -98,9 +97,9 @@ void plu(int n, double A[n][n], int P[n]) {
 	
 	    // Swap the elements below the diagonal in L
 	    for (int j = 0; j < k; j++) {
-	        temp_row[j] = L[k][j];
+	        temp = L[k][j];
 	        L[k][j] = L[pivot][j];
-	        L[pivot][j] = temp_row[j];
+	        L[pivot][j] = temp;
 	    }
 	}
 
