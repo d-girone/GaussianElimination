@@ -8,6 +8,7 @@
 *
 *----------------------------------------------------------------*/
 #include "gauss_solve.h"
+#include <math.h>
 
 void gauss_solve_in_place(const int n, double A[n][n], double b[n])
 {
@@ -49,6 +50,78 @@ void lu_in_place(const int n, double A[n][n])
     }
   }
 }
+//BLOCK
+
+void plu(int n, double A[n][n], int P[n]) {
+    // Create a temporary array for row swapping
+    double temp_row[n];
+
+    // Initialize the permutation vector P
+    for (int i = 0; i < n; i++) {
+        P[i] = i;  // Identity matrix for permutation
+    }
+
+    // Initialize L as a zero matrix and U as a copy of A
+    double L[n][n];  // Lower triangular matrix
+    double U[n][n];  // Upper triangular matrix
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            L[i][j] = 0.0;
+            U[i][j] = A[i][j];
+        }
+    }
+
+    // Perform the LU Decomposition with Partial Pivoting
+    for (int k = 0; k < n; k++) {
+        // Find pivot (the row with the largest value in column k)
+        int pivot = k;
+        for (int i = k + 1; i < n; i++) {
+            if (fabs(U[i][k]) > fabs(U[pivot][k])) {
+                pivot = i;
+            }
+        }
+
+        // If pivot is not the same as k, swap rows
+        if (pivot != k) {
+            // Swap rows in U
+            for (int j = 0; j < n; j++) {
+                temp_row[j] = U[k][j];
+                U[k][j] = U[pivot][j];
+                U[pivot][j] = temp_row[j];
+            }
+	// Swap corresponding rows in L (note: only the elements below the diagonal)
+            for (int j = 0; j < k; j++) {
+                temp_row[j] = L[k][j];
+                L[k][j] = L[pivot][j];
+                L[pivot][j] = temp_row[j];
+            }
+
+            // Swap rows in P (the permutation matrix)
+            int temp = P[k];
+            P[k] = P[pivot];
+            P[pivot] = temp;
+        }
+
+        // Perform the elimination process
+        for (int i = k + 1; i < n; i++) {
+            double multiplier = U[i][k] / U[k][k];
+            L[i][k] = multiplier;
+
+            // Update the U matrix by eliminating the entries below the pivot
+            for (int j = k; j < n; j++) {
+                U[i][j] -= multiplier * U[k][j];
+            }
+        }
+    }
+
+    // Set the diagonal of L to 1
+    for (int i = 0; i < n; i++) {
+        L[i][i] = 1.0;
+    }
+}
+    
+//BLOCK
 
 void lu_in_place_reconstruct(int n, double A[n][n])
 {

@@ -10,6 +10,7 @@
 # A Python wrapper module around the C library libgauss.so
 
 import ctypes
+import numpy as np
 
 gauss_library_path = './libgauss.so'
 
@@ -66,7 +67,81 @@ def lu_python(A):
 
     return unpack(A)
 
+class NoImpementationInC(Exception):
+    pass
 
+def plu(A,use_c):
+  if use_c:
+    print('Attempting to use C')
+    #raise(NoImpementationInC)
+    lib = ctypes.CDLL(gauss_library_path)
+    lib.plu.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.POINTER(ctypes.c_double)), ctypes.POINTER(ctypes.c_int)]
+    lib.plu.restype = None
+    
+    # Create a sample matrix A (3x3) in Python using numpy
+    #A = np.array([[4, 9, 10], [14, 30, 34], [2, 3, 3]], dtype=np.float64)
+    A = np.array(A)
+    n = len(A)
+    
+    # Create a permutation vector P
+    P = np.zeros(n, dtype=np.int32)
+    
+    # Create a ctypes-compatible matrix A
+    A_ctypes = (ctypes.POINTER(ctypes.c_double) * n)(*[
+        (ctypes.c_double * n)(*row) for row in A
+    ])
+    
+    # Call the C function
+    lib.plu(n, A_ctypes, P.ctypes.data_as(ctypes.POINTER(ctypes.c_int)))
+    # Print the results
+    print("Permutation vector P:", P)
+    
+    print("Lower triangular matrix L:")
+    for i in range(n):
+        for j in range(n):
+            print(f"{A[i][j]:.6f}", end=" ")
+        print()
+    
+    L,U = lu_c(A)
+    #L = np.array(L).tolist()
+    #U = np.array(U).tolist()
+    #print(type(P))
+    #print(P)
+    #print(type(L))
+    #print(L)
+    #print(type(U))
+    #print(U)
+    print('error is in return validation')
+    return P.tolist(),L,U
+
+  else:
+    #A = np.array([[4,9,10],[14,30,34],[2,3,3]])
+    A = np.array(A)
+    #print(A)
+    n = len(A)
+    P = np.arange(n)
+    L = np.zeros_like(A).astype(np.float64)
+    U = A.astype(np.float64)
+    
+    for k in range(0,n):
+      pivot = np.argmax(U[k:,k])+k
+      if k!= pivot:
+        print('swapping rows',k,'and',pivot)
+        U[[k,pivot]] = U[[pivot,k]]
+        P[[k,pivot]] = P[[pivot,k]]
+        L[[k, pivot], :k] = L[[pivot, k], :k]
+        
+      for i in range(k + 1, n):
+        multiplier = U[i, k] / U[k, k]
+        L[i, k] = multiplier
+        U[i, k:n] -= multiplier * U[k, k:n]
+
+    for ii in range(n):
+      L[ii,ii] = 1
+
+    print('error is in return validation...')
+    return P.tolist(),L.tolist(),U.tolist()
+    
 def lu(A, use_c=False):
     if use_c:
         return lu_c(A)
