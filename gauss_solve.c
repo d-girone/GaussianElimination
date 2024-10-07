@@ -120,7 +120,7 @@ void plu(int n, double A[n][n], int P[n]) {
     for (int i = 0; i < n; i++) {
         L[i][i] = 1.0;
     }
-    
+}
 //BLOCK
 
 void lu_in_place_reconstruct(int n, double A[n][n])
