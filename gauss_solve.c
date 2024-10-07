@@ -91,9 +91,9 @@ void plu(int n, double A[n][n], int P[n]) {
 	    }
 	
 	    // Swap rows in P (the permutation vector)
-	    temp = P[k];
+	    int temp2 = P[k];
 	    P[k] = P[pivot];
-	    P[pivot] = temp;
+	    P[pivot] = temp2;
 	
 	    // Swap the elements below the diagonal in L
 	    for (int j = 0; j < k; j++) {
@@ -113,6 +113,15 @@ void plu(int n, double A[n][n], int P[n]) {
                 U[i][j] -= multiplier * U[k][j];
             }
         }
+    }
+    for (i = 0; i<n; i++){
+      for (j=0; j<n; j++){
+        if (j>=i){
+          A[i][j] = U[i][j];
+        } else {
+          A[i][j] = L[i][j];
+          }
+      }
     }
 
     // Set the diagonal of L to 1 (since L is lower triangular)
