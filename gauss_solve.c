@@ -114,15 +114,16 @@ void plu(int n, double A[n][n], int P[n]) {
             }
         }
     }
-	for (int i = 0; i < n; i++) {
-	    for (int j = 0; j < n; j++) {
-	        if (j >= i) {
-	            A[i][j] = U[i][j];
-	        } else {
-	            A[i][j] = L[i][j];
-	        }
-	    }
-	}
+// Combine L and U to form A
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (j >= i) {
+                A[i][j] = U[i][j];
+            } else {
+                A[i][j] = L[i][j];
+            }
+        }
+    }
 
     // Set the diagonal of L to 1 (since L is lower triangular)
     for (int i = 0; i < n; i++) {
