@@ -73,10 +73,10 @@ void plu(int n, double A[n][n], int P[n]) {
     }
 
     // Perform the LU Decomposition with Partial Pivoting
-    for (int k = 0; k < n; k++) {
+    for (int k = 0; k < n-1; k++) {
         // Find pivot (the row with the largest value in column k)
         int pivot = k;
-        for (int i = k + 1; i <= n; i++) {
+        for (int i = k + 1; i < n; i++) {
             if (fabs(U[i][k]) > fabs(U[pivot][k])) {
                 pivot = i;
             }
@@ -85,7 +85,7 @@ void plu(int n, double A[n][n], int P[n]) {
         // If pivot is not the same as k, swap rows
         if (pivot != k) {
 	    // Swap rows in U
-	    for (int j = 0; j <= n; j++) {
+	    for (int j = 0; j < n; j++) {
 	        temp_row[j] = U[k][j];
 	        U[k][j] = U[pivot][j];
 	        U[pivot][j] = temp_row[j];
