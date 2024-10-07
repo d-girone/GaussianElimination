@@ -55,6 +55,7 @@ void lu_in_place(const int n, double A[n][n])
 void plu(int n, double A[n][n], int P[n]) {
     // Create a temporary array for row swapping
     double temp;
+
     // Initialize the permutation vector P
     for (int i = 0; i < n; i++) {
         P[i] = i;  // Identity matrix for permutation
@@ -72,7 +73,7 @@ void plu(int n, double A[n][n], int P[n]) {
     }
 
     // Perform the LU Decomposition with Partial Pivoting
-    for (int k = 0; k < n-1; k++) {
+    for (int k = 0; k < n - 1; k++) {
         // Find pivot (the row with the largest value in column k)
         int pivot = k;
         for (int i = k + 1; i < n; i++) {
@@ -83,25 +84,25 @@ void plu(int n, double A[n][n], int P[n]) {
 
         // If pivot is not the same as k, swap rows
         if (pivot != k) {
-	    // Swap rows in U
-	    for (int j = 0; j < n; j++) {
-	        temp = U[k][j];
-	        U[k][j] = U[pivot][j];
-	        U[pivot][j] = temp;
-	    }
-	
-	    // Swap rows in P (the permutation vector)
-	    int temp2 = P[k];
-	    P[k] = P[pivot];
-	    P[pivot] = temp2;
-	
-	    // Swap the elements below the diagonal in L
-	    for (int j = 0; j < k; j++) {
-	        temp = L[k][j];
-	        L[k][j] = L[pivot][j];
-	        L[pivot][j] = temp;
-	    }
-	}
+            // Swap rows in U
+            for (int j = 0; j < n; j++) {
+                temp = U[k][j];
+                U[k][j] = U[pivot][j];
+                U[pivot][j] = temp;
+            }
+
+            // Swap rows in P (the permutation vector)
+            int temp2 = P[k];
+            P[k] = P[pivot];
+            P[pivot] = temp2;
+
+            // Swap the elements below the diagonal in L
+            for (int j = 0; j < k; j++) {
+                temp = L[k][j];
+                L[k][j] = L[pivot][j];
+                L[pivot][j] = temp;
+            }
+        }
 
         // Perform the elimination process
         for (int i = k + 1; i < n; i++) {
@@ -114,13 +115,13 @@ void plu(int n, double A[n][n], int P[n]) {
             }
         }
     }
-// Combine L and U to form A
+
+    // Combine L and U to form A
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             if (j >= i) {
                 A[i][j] = U[i][j];
-            } 
-	    else {
+            } else {
                 A[i][j] = L[i][j];
             }
         }
@@ -131,6 +132,7 @@ void plu(int n, double A[n][n], int P[n]) {
         L[i][i] = 1.0;
     }
 }
+
 //BLOCK
 
 void lu_in_place_reconstruct(int n, double A[n][n])
