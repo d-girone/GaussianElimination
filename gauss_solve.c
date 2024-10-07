@@ -73,7 +73,7 @@ void plu(int n, double A[n][n], int P[n]) {
     }
 
     // Perform the LU Decomposition with Partial Pivoting
-    for (int k = 0; k < n; k++) {
+    for (int k = 0; k < n-1; k++) {
         // Find pivot (the row with the largest value in column k)
         int pivot = k;
         for (int i = k + 1; i < n; i++) {
