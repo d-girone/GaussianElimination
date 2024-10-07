@@ -119,7 +119,8 @@ void plu(int n, double A[n][n], int P[n]) {
         for (int j = 0; j < n; j++) {
             if (j >= i) {
                 A[i][j] = U[i][j];
-            } else {
+            } 
+	    else {
                 A[i][j] = L[i][j];
             }
         }
