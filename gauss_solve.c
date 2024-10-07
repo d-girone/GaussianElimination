@@ -52,6 +52,15 @@ void lu_in_place(const int n, double A[n][n])
 }
 //BLOCK
 
+// Function to swap rows in a matrix
+void swapRows(double* matrix, int n, int row1, int row2) {
+    for (int j = 0; j < n; j++) {
+        double temp = matrix[row1 * n + j];
+        matrix[row1 * n + j] = matrix[row2 * n + j];
+        matrix[row2 * n + j] = temp;
+    }
+}
+
 void plu(int n, double A[n][n], int P[n]) {
     // Create a temporary array for row swapping
     double temp_row[n];
@@ -72,35 +81,25 @@ void plu(int n, double A[n][n], int P[n]) {
         }
     }
 
-    // Perform the LU Decomposition with Partial Pivoting
-    for (int k = 0; k < n-1; k++) {
-        // Find pivot (the row with the largest value in column k)
-        int pivot = k;
+    // Find pivot (max absolute value in column k from row k to n)
+        int pivotRow = k;
         for (int i = k + 1; i < n; i++) {
-            if (fabs(U[i][k]) > fabs(U[pivot][k])) {
-                pivot = i;
+            if (fabs(U[i * n + k]) > fabs(U[pivotRow * n + k])) {
+                pivotRow = i;
             }
         }
 
-        // If pivot is not the same as k, swap rows
-        if (pivot != k) {
-            // Swap rows in U
-            for (int j = 0; j < n; j++) {
-                temp_row[j] = U[k][j];
-                U[k][j] = U[pivot][j];
-                U[pivot][j] = temp_row[j];
-            }
-	// Swap corresponding rows in L (note: only the elements below the diagonal)
-            for (int j = 0; j < k; j++) {
-                temp_row[j] = L[k][j];
-                L[k][j] = L[pivot][j];
-                L[pivot][j] = temp_row[j];
-            }
+        // If pivotRow != k, swap rows k and pivotRow in U, P, and L
+        if (pivotRow != k) {
+            swapRows(U, n, k, pivotRow);
+            swapRows(P, n, k, pivotRow);
 
-            // Swap rows in P (the permutation matrix)
-            int temp = P[k];
-            P[k] = P[pivot];
-            P[pivot] = temp;
+            // In L, we swap only the elements up to column k-1
+            for (int i = 0; i < k; i++) {
+                double temp = L[k * n + i];
+                L[k * n + i] = L[pivotRow * n + i];
+                L[pivotRow * n + i] = temp;
+            }
         }
 
         // Perform the elimination process
