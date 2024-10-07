@@ -72,37 +72,37 @@ void plu(int n, double A[n][n], int P[n]) {
         }
     }
 
-    // Perform LU Decomposition with partial pivoting
-    for (int k = 0; k < n-1; k++) {
-        // Find pivot (max absolute value in column k from row k to n)
+    // Perform the LU Decomposition with Partial Pivoting
+    for (int k = 0; k < n; k++) {
+        // Find pivot (the row with the largest value in column k)
         int pivot = k;
         for (int i = k + 1; i < n; i++) {
-            if (fabs(U[i * n + k]) > fabs(U[pivot * n + k])) {
+            if (fabs(U[i][k]) > fabs(U[pivot][k])) {
                 pivot = i;
             }
         }
 
-        // If pivot is not k, swap rows in U, P, and L
+        // If pivot is not the same as k, swap rows
         if (pivot != k) {
             // Swap rows in U
             for (int j = 0; j < n; j++) {
-                double temp = U[k * n + j];
-                U[k * n + j] = U[pivot * n + j];
-                U[pivot * n + j] = temp;
+                temp_row[j] = U[k][j];
+                U[k][j] = U[pivot][j];
+                U[pivot][j] = temp_row[j];
+            }
+	// Swap corresponding rows in L (note: only the elements below the diagonal)
+            for (int j = 0; j < k; j++) {
+                temp_row[j] = L[k][j];
+                L[k][j] = L[pivot][j];
+                L[pivot][j] = temp_row[j];
             }
 
-            // Swap rows in P (permutation vector)
-            double tempP = P[k];
+            // Swap rows in P (the permutation matrix)
+            int temp = P[k];
             P[k] = P[pivot];
-            P[pivot] = tempP;
-
-            // Swap corresponding entries in L (up to column k)
-            for (int i = 0; i < k; i++) {
-                double tempL = L[k * n + i];
-                L[k * n + i] = L[pivot * n + i];
-                L[pivot * n + i] = tempL;
-            }
+            P[pivot] = temp;
         }
+
         // Perform the elimination process
         for (int i = k + 1; i < n; i++) {
             double multiplier = U[i][k] / U[k][k];
