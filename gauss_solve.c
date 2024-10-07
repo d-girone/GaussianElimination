@@ -84,25 +84,25 @@ void plu(int n, double A[n][n], int P[n]) {
 
         // If pivot is not the same as k, swap rows
         if (pivot != k) {
-            // Swap rows in U
-            for (int j = 0; j < n; j++) {
-                temp_row[j] = U[k][j];
-                U[k][j] = U[pivot][j];
-                U[pivot][j] = temp_row[j];
-            }
-
-            // Swap rows in P (the permutation vector)
-            int temp = P[k];
-            P[k] = P[pivot];
-            P[pivot] = temp;
-
-            // Swap the elements below the diagonal in L
-            for (int j = 0; j < k; j++) {
-                temp_row[j] = L[k][j];
-                L[k][j] = L[pivot][j];
-                L[pivot][j] = temp_row[j];
-            }
-        }
+	    // Swap rows in U
+	    for (int j = 0; j < n; j++) {
+	        temp_row[j] = U[k][j];
+	        U[k][j] = U[pivot][j];
+	        U[pivot][j] = temp_row[j];
+	    }
+	
+	    // Swap rows in P (the permutation vector)
+	    int temp = P[k];
+	    P[k] = P[pivot];
+	    P[pivot] = temp;
+	
+	    // Swap the elements below the diagonal in L
+	    for (int j = 0; j < k; j++) {
+	        temp_row[j] = L[k][j];
+	        L[k][j] = L[pivot][j];
+	        L[pivot][j] = temp_row[j];
+	    }
+	}
 
         // Perform the elimination process
         for (int i = k + 1; i < n; i++) {
