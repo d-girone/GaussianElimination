@@ -52,15 +52,6 @@ void lu_in_place(const int n, double A[n][n])
 }
 //BLOCK
 
-// Function to swap rows in a matrix
-void swapRows(double* matrix, int n, int row1, int row2) {
-    for (int j = 0; j < n; j++) {
-        double temp = matrix[row1 * n + j];
-        matrix[row1 * n + j] = matrix[row2 * n + j];
-        matrix[row2 * n + j] = temp;
-    }
-}
-
 void plu(int n, double A[n][n], int P[n]) {
     // Create a temporary array for row swapping
     double temp_row[n];
@@ -82,7 +73,7 @@ void plu(int n, double A[n][n], int P[n]) {
     }
 
     // Perform LU Decomposition with partial pivoting
-    for (int k = 0; k < n; k++) {
+    for (int k = 0; k < n-1; k++) {
         // Find pivot (max absolute value in column k from row k to n)
         int pivot = k;
         for (int i = k + 1; i < n; i++) {
