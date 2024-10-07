@@ -90,23 +90,24 @@ void plu(int n, double A[n][n], int P[n]) {
                 U[k][j] = U[pivot][j];
                 U[pivot][j] = temp_row[j];
             }
-	// Swap corresponding rows in L (note: only the elements below the diagonal)
+
+            // Swap rows in P (the permutation vector)
+            int temp = P[k];
+            P[k] = P[pivot];
+            P[pivot] = temp;
+
+            // Swap the elements below the diagonal in L
             for (int j = 0; j < k; j++) {
                 temp_row[j] = L[k][j];
                 L[k][j] = L[pivot][j];
                 L[pivot][j] = temp_row[j];
             }
-
-            // Swap rows in P (the permutation matrix)
-            int temp = P[k];
-            P[k] = P[pivot];
-            P[pivot] = temp;
         }
 
         // Perform the elimination process
         for (int i = k + 1; i < n; i++) {
             double multiplier = U[i][k] / U[k][k];
-            L[i][k] = multiplier;
+            L[i][k] = multiplier;  // Store the multiplier in L
 
             // Update the U matrix by eliminating the entries below the pivot
             for (int j = k; j < n; j++) {
@@ -115,11 +116,10 @@ void plu(int n, double A[n][n], int P[n]) {
         }
     }
 
-    // Set the diagonal of L to 1
+    // Set the diagonal of L to 1 (since L is lower triangular)
     for (int i = 0; i < n; i++) {
         L[i][i] = 1.0;
     }
-}
     
 //BLOCK
 
