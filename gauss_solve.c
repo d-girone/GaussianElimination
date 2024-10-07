@@ -54,7 +54,7 @@ void lu_in_place(const int n, double A[n][n])
 
 void plu(int n, double A[n][n], int P[n]) {
     // Create a temporary array for row swapping
-    double temp
+    double temp;
     // Initialize the permutation vector P
     for (int i = 0; i < n; i++) {
         P[i] = i;  // Identity matrix for permutation
